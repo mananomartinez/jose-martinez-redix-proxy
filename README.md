@@ -4,7 +4,7 @@
 ## Introduction
 This project implements a read-through proxy for a Redis to maintain a cache of user-requested values.
 
-The original document with the description of the problem and its requirements can be found in the [candidateBrief.md](./candidateBrief.md) file.
+The original document with the description of the problem and its requirements can be found in the [here](./candidateBrief/README.md).
  
 ### Requirement overview
 - External requests come into the proxy via a web server/service listening for them.
