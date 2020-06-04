@@ -1,0 +1,39 @@
+version: '3'
+services:
+    redis:
+        image: redis:latest
+        build: ./docker/redis
+        ports:
+            - 6379:6379
+        volumes:
+            - ./config/redis.conf:/redis.conf
+        command: [ "redis-server", "/redis.conf" ]
+        networks:
+            - proxy
+    redis-proxy:
+        build: .
+        environment:
+            - PROXY_ADDRESS=0.0.0.0
+            - PROXY_PORT=9090
+        links:
+            - redis
+        ports:
+            - 9090:9090
+        networks:
+            - proxy
+        command: "ruby src/main.rb -r redis -p 6379 -e 5 -c 10 -t 10"
+    redis-proxy-tests:
+        build: .
+        environment:
+            - REDIS_ADDRESS=redis
+            - REDIS_PORT=6379
+            - PROXY_ADDRESS=redis-proxy
+            - PROXY_PORT=9090
+        links:
+            - redis-proxy
+            - redis
+        networks:
+            - proxy
+networks:
+    proxy:
+        driver: "bridge"
